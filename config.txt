@@ -1,0 +1,3 @@
+* disable warning typo strings
+  menu: File|Editor|Inspections|Proofreading|Typo
+  select 'No highlighting (fix available)'
