@@ -27,7 +27,11 @@ val qtyList = listOf(
 )
 
 @Composable
-fun StartScreen(navController: NavController, innerPadding: PaddingValues) {
+fun StartScreen(
+    navController: NavController,
+    viewModel: OrderViewModel,
+    innerPadding: PaddingValues
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,8 +59,10 @@ fun StartScreen(navController: NavController, innerPadding: PaddingValues) {
         ) {
             qtyList.forEach { item ->
                 BtnQty(
-                    navController,
-                    item.first
+                    viewModel = viewModel,
+                    navController = navController,
+                    txt = item.first,
+                    qty = item.second
                 )
             }
         }
@@ -64,10 +70,18 @@ fun StartScreen(navController: NavController, innerPadding: PaddingValues) {
 }
 
 @Composable
-fun BtnQty(navController: NavController, txt: String) {
+fun BtnQty(
+    viewModel: OrderViewModel,
+    navController: NavController,
+    txt: String,
+    qty: Int
+) {
     Button(
         modifier = Modifier.width(200.dp),
-        onClick = { navController.navigate(Screens.Flavor.name) }
+        onClick = {
+            viewModel.setQuantity(qty = qty)
+            navController.navigate(Screens.Flavor.name)
+        }
     ) {
         Text(text = txt)
     }
