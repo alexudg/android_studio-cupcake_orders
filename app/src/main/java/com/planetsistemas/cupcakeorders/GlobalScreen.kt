@@ -4,7 +4,11 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -13,7 +17,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -25,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
  * Nombres definitivos para navegar entre las pantallas
  */
 enum class Screens {
+    Splash,
     Start,
     Flavor,
     PickUp,
@@ -36,6 +45,7 @@ enum class Screens {
 @Composable
 fun GlobalScreen(viewModel: OrderViewModel = viewModel()) {
     val navController = rememberNavController()
+    var isShowBackIcon by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -45,6 +55,18 @@ fun GlobalScreen(viewModel: OrderViewModel = viewModel()) {
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.tertiary
                 ),
+                navigationIcon = {
+                    if (isShowBackIcon) {
+                        IconButton(
+                            onClick = { navController.popBackStack() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = "Go Back"
+                            )
+                        }
+                    }
+                },
                 title = {
                     Text("Payasitos")
                 },
@@ -55,16 +77,26 @@ fun GlobalScreen(viewModel: OrderViewModel = viewModel()) {
 
         NavHost(
             navController = navController,
-            startDestination = Screens.Start.name
+            startDestination = Screens.Splash.name
         ) {
+            composable(route = Screens.Splash.name) {
+                SplashScreen(
+                    navController = navController
+                )
+            }
+
             composable(route = Screens.Start.name) {
+                isShowBackIcon = false
+
                 StartScreen(
-                    navController,
-                    viewModel,
-                    innerPadding)
+                    navController = navController,
+                    viewModel = viewModel,
+                    innerPadding = innerPadding)
             }
 
             composable(route = Screens.Flavor.name) {
+                isShowBackIcon = true
+
                 FlavorScreen(
                     navController = navController,
                     total = uiState.total,

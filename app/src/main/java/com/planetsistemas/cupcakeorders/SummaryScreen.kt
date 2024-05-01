@@ -1,5 +1,7 @@
 package com.planetsistemas.cupcakeorders
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,6 +24,8 @@ fun SummaryScreen(
     innerPadding: PaddingValues,
     onClickCancel: () -> Unit
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +59,7 @@ fun SummaryScreen(
         {
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}
+                onClick = { shareOrder(context, uiState) }
             ) {
                 Text("Enviar pedido a otra app")
             }
@@ -66,4 +71,29 @@ fun SummaryScreen(
             }
         }
     }
+}
+
+fun shareOrder(context: Context, uiState: OrderUiState) {
+    val subject = "Nueva orden de Payasitos"
+
+    // create summary
+    val summary = String.format(
+        "Cantidad: %d \n Sabor: %s \n Fecha de entrega: %s \n TOTAL: %s",
+        uiState.quantity,
+        uiState.flavor,
+        uiState.date,
+        "%.2f".format(uiState.total)
+    )
+
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, summary)
+    }
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            subject
+        )
+    )
 }
