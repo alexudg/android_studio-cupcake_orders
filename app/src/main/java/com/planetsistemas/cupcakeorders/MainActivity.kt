@@ -13,11 +13,17 @@ package com.planetsistemas.cupcakeorders
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.planetsistemas.cupcakeorders.ui.theme.Android_Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Splash Screen
+        var isKeepSplashScreen = false
+        installSplashScreen().setKeepOnScreenCondition { isKeepSplashScreen }
+
         setContent {
             Android_Theme {
                 GlobalScreen()

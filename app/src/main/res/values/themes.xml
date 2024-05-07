@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Android_studiocupcake_orders" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.Main" parent="android:Theme.Material.Light.NoActionBar"/>
 
+    <!-- Theme for splash screen -->
+    <style name="Theme.SplashScreen.Name" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#D8AEAE</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+
+        <!-- theme after hide splash screen -->
+        <item name="postSplashScreenTheme">@style/Theme.Main</item>
+
+        <!-- no more to 1000ms -->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+    </style>
 </resources>
